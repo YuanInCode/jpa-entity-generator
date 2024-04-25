@@ -159,6 +159,9 @@ public class CodeGeneratorConfig implements Serializable {
     // see also: https://github.com/rzwitserloot/lombok/issues/816
     private boolean autoPreparationForLombokBuilderEnabled;
 
+    // Add support for the new java time API introduced by jsr310.
+    private boolean useJsr310DateTime;
+
     private List<ImportRule> importRules = new ArrayList<>();
 
     private List<ClassNameRule> classNameRules = new ArrayList<>();

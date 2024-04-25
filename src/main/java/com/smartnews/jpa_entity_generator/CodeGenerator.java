@@ -126,7 +126,7 @@ public class CodeGenerator {
                     f.setType(fieldTypeRule.get().getTypeName());
                     f.setPrimitive(isPrimitive(f.getType()));
                 } else {
-                    f.setType(TypeConverter.toJavaType(c.getTypeCode()));
+                    f.setType(TypeConverter.toJavaType(c.getTypeCode(), config.isUseJsr310DateTime()));
                     if (!c.isNullable() && config.isUsePrimitiveForNonNullField()) {
                         f.setType(TypeConverter.toPrimitiveTypeIfPossible(f.getType()));
                     }

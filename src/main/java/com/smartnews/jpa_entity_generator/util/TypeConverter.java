@@ -10,7 +10,7 @@ public class TypeConverter {
     private TypeConverter() {
     }
 
-    public static String toJavaType(int typeCode) {
+    public static String toJavaType(int typeCode, boolean useJsr310DateTime) {
         switch (typeCode) {
             case Types.ARRAY:
                 return "Array";
@@ -30,6 +30,9 @@ public class TypeConverter {
                 return "Clob";
             // case Types.DATALINK:
             case Types.DATE:
+                if (useJsr310DateTime) {
+                    return "java.time.LocalDate";
+                }
                 return "Date";
             case Types.DECIMAL:
                 return "java.math.BigDecimal";
@@ -64,12 +67,16 @@ public class TypeConverter {
             case Types.STRUCT:
                 return "Struct";
             case Types.TIME:
-                return "Time";
             case Types.TIME_WITH_TIMEZONE:
+                if(useJsr310DateTime) {
+                    return "java.time.LocalTime";
+                }
                 return "Time";
             case Types.TIMESTAMP:
-                return "Timestamp";
             case Types.TIMESTAMP_WITH_TIMEZONE:
+                if(useJsr310DateTime) {
+                    return "java.time.LocalDateTime";
+                }
                 return "Timestamp";
             case Types.TINYINT:
                 return "Byte";
