@@ -8,6 +8,8 @@ import org.junit.Test;
 import org.junit.runners.MethodSorters;
 import com.example.unit.DatabaseUtil;
 
+import java.io.IOException;
+
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
@@ -55,4 +57,11 @@ public class CodeGeneratorTest {
         CodeGenerator.generateAll(config, false);
     }
 
+    @Test
+    public void _05_generateAllWithJpaRepository_useShortClassNameAsEntityName() throws Exception {
+        CodeGeneratorConfig config = CodeGeneratorConfig.load("entityGenConfig5.yml");
+        config.setUseShortClassNameAsEntityName(true);
+        config.setOutputDirectory("src/test/java");
+        CodeGenerator.generateAll(config, false);
+    }
 }

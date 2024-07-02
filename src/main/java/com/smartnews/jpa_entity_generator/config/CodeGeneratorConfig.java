@@ -32,6 +32,9 @@ public class CodeGeneratorConfig implements Serializable {
             ImportRule.createGlobal("lombok.AllArgsConstructor")
     );
 
+    public static final ImportRule IMPORT_RULE_JPA_REPOSITORY
+            = ImportRule.createGlobal("org.springframework.data.jpa.repository.JpaRepository");
+
     // ----------
     // Preset
 
@@ -161,6 +164,13 @@ public class CodeGeneratorConfig implements Serializable {
 
     // Add support for the new java time API introduced by jsr310.
     private boolean useJsr310DateTime;
+
+    // use short class name as the name attr of @Entity
+    private boolean useShortClassNameAsEntityName;
+
+    // generate jpa repository
+    private boolean generateJpaRepository;
+    private String repositoryPackageName;
 
     private List<ImportRule> importRules = new ArrayList<>();
 

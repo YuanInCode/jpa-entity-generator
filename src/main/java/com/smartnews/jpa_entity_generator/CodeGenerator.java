@@ -18,9 +18,11 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 
@@ -91,7 +93,11 @@ public class CodeGenerator {
             Annotation entityAnnotation = Annotation.fromClassName(entityClassName);
             AnnotationAttribute entityAnnotationValueAttr = new AnnotationAttribute();
             entityAnnotationValueAttr.setName("name");
-            entityAnnotationValueAttr.setValue("\"" + data.getPackageName() + "." + data.getClassName() + "\"");
+            if (config.isUseShortClassNameAsEntityName()) {
+                entityAnnotationValueAttr.setValue("\"" + data.getClassName() + "\"");
+            } else {
+                entityAnnotationValueAttr.setValue("\"" + data.getPackageName() + "." + data.getClassName() + "\"");
+            }
             entityAnnotation.getAttributes().add(entityAnnotationValueAttr);
             entityClassAnnotationRule.setAnnotations(Arrays.asList(entityAnnotation));
             entityClassAnnotationRule.setClassName(className);
@@ -103,6 +109,7 @@ public class CodeGenerator {
                     .filter(r -> r.matches(className))
                     .collect(toList()));
 
+            AtomicReference<String> primaryKeyType = new AtomicReference<>(null);
             List<CodeRenderer.RenderingData.Field> fields = table.getColumns().stream().map(c -> {
                 CodeRenderer.RenderingData.Field f = new CodeRenderer.RenderingData.Field();
 
@@ -145,6 +152,11 @@ public class CodeGenerator {
 
                 f.setAutoIncrement(c.isAutoIncrement());
                 f.setPrimaryKey(c.isPrimaryKey());
+
+                if (f.isPrimaryKey()) {
+                    primaryKeyType.set(f.getType());
+                }
+
                 return f;
 
             }).collect(toList());
@@ -218,6 +230,29 @@ public class CodeGenerator {
                 Files.createFile(path);
             }
             Files.write(path, code.getBytes());
+
+            // generate jpa repository if enabled
+            if (config.isGenerateJpaRepository() && primaryKeyType.get() != null) {
+                String repoInterfaceName = className + "Repository";
+
+                CodeRenderer.RenderingData repoData = new CodeRenderer.RenderingData();
+                repoData.setClassName(repoInterfaceName);
+                repoData.setPackageName(config.getRepositoryPackageName());
+                repoData.setImportRules(Arrays.asList(CodeGeneratorConfig.IMPORT_RULE_JPA_REPOSITORY,
+                        ImportRule.createGlobal(data.getPackageName() + "." + className)));
+                repoData.setInterfaceNames(singletonList(String.format("JpaRepository<%s, %s>", className, primaryKeyType.get())));
+
+                String repoFilepath = config.getOutputDirectory()
+                        + "/" + repoData.getPackageName().replaceAll("\\.", "/")
+                        + "/" + repoInterfaceName + ".java";
+                Path repoPath = Paths.get(repoFilepath);
+                if (!Files.exists(repoPath)) {
+                    Files.createFile(repoPath);
+                }
+
+                String repoCode = CodeRenderer.render("entityGen/repository.ftl", repoData);
+                Files.write(repoPath, repoCode.getBytes());
+            }
 
             log.debug("path: {}, code: {}", path, code);
         }
