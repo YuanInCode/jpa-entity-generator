@@ -66,24 +66,24 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-gpg-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>sign-artifacts</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>sign</goal>
-                        </goals>
-<!--                    Please refer to this page https://central.sonatype.org/publish/publish-maven/#gpg-signed-components  -->
+<!--            <plugin>-->
+<!--                <groupId>org.apache.maven.plugins</groupId>-->
+<!--                <artifactId>maven-gpg-plugin</artifactId>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <id>sign-artifacts</id>-->
+<!--                        <phase>verify</phase>-->
+<!--                        <goals>-->
+<!--                            <goal>sign</goal>-->
+<!--                        </goals>-->
+<!--&lt;!&ndash;                    Please refer to this page https://central.sonatype.org/publish/publish-maven/#gpg-signed-components  &ndash;&gt;-->
 <!--                    <configuration>                                                                                      -->
 <!--                        <keyname>${gpg.keyname}</keyname>                                                                -->
 <!--                        <passphraseServerId>${gpg.keyname}</passphraseServerId>                                          -->
 <!--                    </configuration>-->
-                    </execution>
-                </executions>
-            </plugin>
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--            </plugin>-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
@@ -167,7 +167,7 @@
         <dependency>
             <groupId>com.smartnews</groupId>
             <artifactId>jpa-entity-generator</artifactId>
-            <version>0.99.8</version>
+            <version>0.99.9</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -180,6 +180,30 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.13.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.persistence</groupId>
+            <artifactId>jakarta.persistence-api</artifactId>
+            <version>3.0.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.annotation</groupId>
+            <artifactId>jakarta.annotation-api</artifactId>
+            <version>2.1.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate.javax.persistence</groupId>
+            <artifactId>hibernate-jpa-2.1-api</artifactId>
+            <version>1.0.0.Final</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-jpa</artifactId>
+            <version>2.3.2.RELEASE</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
