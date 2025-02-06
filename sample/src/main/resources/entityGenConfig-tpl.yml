@@ -1,0 +1,34 @@
+jdbcSettings:
+  url: "jdbc:mysql://10.228.131.93:3306/Activity"
+  username: "root"
+  password: "zqsc123$Mk"
+  driverClassName: "com.mysql.cj.jdbc.Driver"
+
+useJsr310DateTime: true
+generateJpaRepository: true
+useShortClassNameAsEntityName: true
+packageName: "com.eastmoney.market.welp.entity.master"
+repositoryPackageName: "com.eastmoney.market.welp.repository.master"
+
+classAnnotationRules:
+  - annotations:
+      - className: "org.hibernate.annotations.DynamicInsert"
+      - className: "org.hibernate.annotations.DynamicUpdate"
+      - className: "lombok.experimental.Accessors"
+        attributes:
+          - name: "chain"
+            value: "true"
+
+# ---------------------------------------------------------
+# *** Table scan mode ***
+
+# Set the scan mode (possible values: All / RuleBased)
+#   - string value: 'All' (default) or 'RuleBased'
+tableScanMode: 'RuleBased'
+
+# If the "tableScanMode" is "RuleBased", the table scanner considers these rules
+#   - array of TableScanRule objects
+#     - tableName (string) / tableNames (array): string value that partially matches table names (case sensitive)
+tableScanRules:
+  #  - tableNames: ["tb_fkc_.*"]
+  - tableNames: [ "tb_welp_super_m1_config" ]
